@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,7 +34,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internal\Client\UDPClientChannel.cs" />
+    <Compile Include="Internal\Client\UDPClientStack.cs" />
+    <Compile Include="Internal\Multicast\UDPMulticastChannel.cs" />
+    <Compile Include="Internal\Multicast\UDPMulticastStack.cs" />
+    <Compile Include="Internal\Server\UDPServerChannel.cs" />
+    <Compile Include="Internal\Server\UDPServerStack.cs" />
+    <Compile Include="Internal\UDPChannel.cs" />
+    <Compile Include="IUDPClientStack.cs" />
+    <Compile Include="IUDPMulticastStack.cs" />
+    <Compile Include="IUDPServerStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UDPClientOptions.cs" />
+    <Compile Include="UDPMulticastOptions.cs" />
+    <Compile Include="UDPServerOptions.cs" />
+    <Compile Include="UDPStackFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -46,4 +60,5 @@
   <ItemGroup>
     <None Include="Packages.config" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -6,36 +6,97 @@ using GKS.Crusader.Protocols.TCP;
 
 namespace Crusader
 {
-	internal class ConnectionListener : IConnectionListener
+	internal class ChannelListener : IChannelListener
 	{
+        private bool _server = false;
+
+        public ChannelListener(bool server)
+        {
+            _server = server;
+
+            return;
+        }
+
 		public void HandleConnected (IChannel channel)
 		{
-			Console.WriteLine ("Client connected : {0}", channel.RemoteAddress);
+            if (_server)
+            {
+                Console.WriteLine("Client connected : {0}", channel.RemoteAddress);
+            }
+            else
+            {
+                var response = Encoding.ASCII.GetBytes("Hello, World");
+
+                channel.Send(response, 0, response.Length);
+
+                Console.WriteLine("Connected to server at : {0}", channel.RemoteAddress);
+            }
+
 			return;
 		}
 
 		public void HandleDisconnected (IChannel channel)
 		{
-			Console.WriteLine ("Client disconnected : {0}", channel.RemoteAddress);
-			return;
+            if (_server)
+            {
+                Console.WriteLine("Client disconnected : {0}", channel.RemoteAddress);
+            }
+            else
+            {
+                Console.WriteLine("Disconnected from server at : {0}", channel.RemoteAddress);
+            }
+
+            return;
 		}
 
-		public void HandleException (IChannel channel, Exception exception)
+		public void HandleExceptioned (IChannel channel, Exception exception)
 		{
-			Console.WriteLine ("Client exceptioned : {0} : {1}", channel.RemoteAddress, exception);
-			return;
+            if (_server)
+            {
+                Console.WriteLine("Client exceptioned : {0} : {1}", channel.RemoteAddress, exception);
+            }
+            else
+            {
+                Console.WriteLine("Server exceptioned : {0} : {1}", channel.RemoteAddress, exception);
+            }
+
+            return;
 		}
 	}
 
-	internal class RawPacketListener : IPacketListener
+	internal class PacketListener : IPacketListener
 	{
+        private bool _server = false;
+
+        public PacketListener(bool server)
+        {
+            _server = server;
+
+            return;
+        }
+
 		public void Handle (IChannel channel, byte[] buffer, int offset, int length)
 		{
-			string message = Encoding.ASCII.GetString (buffer, offset, length);
+            if (_server)
+            {
+                var message = Encoding.ASCII.GetString(buffer, offset, length);
 
-			Console.WriteLine ("New message : {0} : {1}", channel.RemoteAddress, message);
+                Console.WriteLine("New message : {0} : {1}", channel.RemoteAddress, message);
 
-			//channel.Dispose ();
+                var response = Encoding.ASCII.GetBytes("Hello, World");
+
+                channel.Send(response, 0, response.Length);
+
+                channel.Dispose();
+            }
+            else
+            {
+                var message = Encoding.ASCII.GetString(buffer, offset, length);
+
+                Console.WriteLine("New message from server : {0} : {1}", channel.RemoteAddress, message);
+                
+                channel.Dispose();
+            }
 
 			return;
 		}
@@ -77,17 +138,26 @@ namespace Crusader
 
 		private static void Main (string[] args)
 		{
-			TCPServerOptions options = new TCPServerOptions ();
+			TCPServerOptions serverOptions = new TCPServerOptions ();
 
-			options.ListenOn = new IPEndPoint (IPAddress.Loopback, 2048);
-			options.ConnectionListener = new ConnectionListener();
-			options.RawPacketListener = new RawPacketListener();
+			serverOptions.ListenOn = new IPEndPoint (IPAddress.Loopback, 80);
+			serverOptions.ChannelListener = new ChannelListener(true);
+			serverOptions.PacketListener = new PacketListener(true);
+
+            TCPClientOptions clientOptions = new TCPClientOptions();
+
+            clientOptions.ConnectTo = new IPEndPoint(IPAddress.Loopback, 80);
+            clientOptions.ChannelListener = new ChannelListener(false);
+            clientOptions.PacketListener = new PacketListener(false);
 
 			SetUp ();
 
-			using (var stack = TCPStackFactory.Create (options)) 
+			using (var serverStack = TCPStackFactory.Create (serverOptions)) 
 			{
-				Pause ();
+                using (var clientStack = TCPStackFactory.Create(clientOptions))
+                {
+                    Pause();
+                }
 			}
 
 			return;

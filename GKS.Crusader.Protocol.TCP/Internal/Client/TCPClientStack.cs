@@ -52,16 +52,15 @@
 
 		private void HandleConnected(object sender, SocketAsyncEventArgs e)
 		{
-			_serverChannel = new TCPClientChannel (this, _options, _serverSocket);
+            if (e.SocketError == SocketError.Success)
+            {
+                _serverChannel = new TCPClientChannel(this, _options, _serverSocket);
+            }
+            else
+            {
+                HandleChannelExceptioned(_serverChannel, new SocketException((int)e.SocketError));
+            }
 
-			_options.ConnectionListener.HandleConnected (_serverChannel);
-
-			return;
-		}
-
-		public override void HandleChannelClosed (IChannel channel)
-		{
-			base.HandleChannelClosed (channel);
 			return;
 		}
 

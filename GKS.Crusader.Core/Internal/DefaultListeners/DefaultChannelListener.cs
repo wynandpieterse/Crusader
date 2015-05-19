@@ -2,7 +2,7 @@
 {
 	using System;
 
-	public class DefaultConnectionListener : IConnectionListener
+	public class DefaultChannelListener : IChannelListener
 	{
 		public void HandleConnected (IChannel channel)
 		{
@@ -14,7 +14,7 @@
 			return;
 		}
 
-		public void HandleException (IChannel channel, Exception exception)
+		public void HandleExceptioned (IChannel channel, Exception exception)
 		{
 			return;
 		}

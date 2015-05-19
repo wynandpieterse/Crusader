@@ -57,19 +57,32 @@
 		{
 			TCPServerChannel channel = null;
 
-			if (StackRunning.IsCancellationRequested) {
-				return;
-			} else if (e.SocketError == SocketError.OperationAborted) {
-				return;
-			} else {
-				StartAccept ();
+			if(StillListening(e))
+            {
+                StartAccept();
 
-				channel = new TCPServerChannel (this, _options, e.AcceptSocket);
-				AddClient (channel);
-			}
+                channel = new TCPServerChannel(this, _options, e.AcceptSocket);
+            }
 
 			return;
 		}
+
+        private bool StillListening(SocketAsyncEventArgs e)
+        {
+            bool listening = true;
+
+            if (_disposed)
+            {
+                listening = false;
+            }
+
+            if(e.SocketError == SocketError.OperationAborted)
+            {
+                listening = false;
+            }
+
+            return listening;
+        }
 
 		private SocketAsyncEventArgs AcquireAcceptEvent()
 		{
@@ -91,12 +104,6 @@
 
 			_acceptEvents.Add (acceptEvent);
 
-			return;
-		}
-
-		public override void HandleChannelClosed (IChannel channel)
-		{
-			base.HandleChannelClosed (channel);
 			return;
 		}
 

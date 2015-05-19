@@ -2,11 +2,11 @@
 {
 	using System;
 
-	public interface IConnectionListener
+	public interface IChannelListener
 	{
 		void HandleConnected(IChannel channel);
 		void HandleDisconnected(IChannel channel);
-		void HandleException(IChannel channel, Exception exception);
+		void HandleExceptioned(IChannel channel, Exception exception);
 	}
 }
 

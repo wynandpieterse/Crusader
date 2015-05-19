@@ -10,87 +10,105 @@
 	using GKS.Crusader.Core;
 	using GKS.Crusader.Core.Internal;
 
-	internal abstract class TCPChannel : Channel
-	{
-		private bool _disposed = false;
-		private NetworkStack _stack = null;
-		private Options _options = null;
+    internal abstract class TCPChannel : Channel
+    {
+        private bool _disposed = false;
+        private NetworkStack _stack = null;
+        private Options _options = null;
 
-		protected Socket Socket { get; private set; }
+        protected Socket Socket { get; private set; }
 
-		protected TCPChannel(NetworkStack stack, Options options, Socket socket)
-			: base(stack, options, ProtocolType.Tcp)
-		{
-			_stack = stack;
-			_options = options;
+        protected TCPChannel(NetworkStack stack, Options options, Socket socket)
+            : base(stack, options, ProtocolType.Tcp)
+        {
+            _stack = stack;
+            _options = options;
 
-			RemoteAddress = socket.RemoteEndPoint;
+            RemoteAddress = socket.RemoteEndPoint;
 
-			Socket = socket;
+            Socket = socket;
 
-			StartReceiving ();
+            HandleConnected();
 
-			return;
-		}
+            StartReceiving();
 
-		private void StartReceiving()
-		{
-			SocketAsyncEventArgs receiveEvent = AcquireReceiveEvent ();
+            return;
+        }
 
-			if (!Socket.ReceiveAsync (receiveEvent)) {
-				HandleReceive (Socket, receiveEvent);
-			}
+        private void StartReceiving()
+        {
+            SocketAsyncEventArgs receiveEvent = AcquireReceiveEvent();
 
-			return;
-		}
+            if (!Socket.ReceiveAsync(receiveEvent)) {
+                HandleReceive(Socket, receiveEvent);
+            }
 
-		private void HandleReceive(object sender, SocketAsyncEventArgs e)
-		{
-			try {
-				do {
-					if(ShouldLeave(e))
-					{
-						break;
-					}
+            return;
+        }
 
-					_options.RawPacketListener.Handle(this, ReceiveEventBuffer(e), 0, e.BytesTransferred);
+        private void HandleReceive(object sender, SocketAsyncEventArgs e)
+        {
+            do {
+                if (StillConnected(e))
+                {
+                    _options.PacketListener.Handle(this, ReceiveEventBuffer(e), 0, e.BytesTransferred);
 
-					ReleaseReceiveEvent(e);
-					e = AcquireReceiveEvent();
-				} while(!Socket.ReceiveAsync (e));
-			} catch(ObjectDisposedException) {
-				HandleClosed ();
-			}
+                    ReleaseReceiveEvent(e);
+                    e = AcquireReceiveEvent();
+                }
+                else
+                {
+                    ReleaseReceiveEvent(e);
+                    return;
+                }
+            } while (!SafeReceive(e));
 
-			return;
-		}
+            return;
+        }
 
-		private bool ShouldLeave(SocketAsyncEventArgs e)
-		{
-			bool leave = false;
+        private bool SafeReceive(SocketAsyncEventArgs e)
+        {
+            bool shouldContinue = false;
 
-			if (SystemRunning.IsCancellationRequested) {
-				leave = true;
-			}
+            try
+            {
+                shouldContinue = Socket.ReceiveAsync(e);
+            }
+            catch (ObjectDisposedException)
+            {
+                HandleDisconnected();
+                shouldContinue = true;
+            }
 
-			if (_disposed) {
-				leave = true;
-			}
+            return shouldContinue;
+        }
 
-			if (e.SocketError != SocketError.Success) {
-				leave = true;
-			}
+        private bool StillConnected(SocketAsyncEventArgs e)
+        {
+            bool connected = true;
 
-			if (e.BytesTransferred == 0) {
-				leave = true;
-			}
+            if (_disposed)
+            {
+                connected = false;
+            }
 
-			if (leave) {
-				HandleClosed ();
-			}
+            if (e.SocketError == SocketError.OperationAborted)
+            {
+                connected = false;
+            }
 
-			return leave;
-		}
+            if (e.BytesTransferred == 0)
+            {
+                connected = false;
+            }
+
+            if(false == connected)
+            {
+                HandleDisconnected();
+            }
+
+            return connected;
+        }
 
 		protected override SocketAsyncEventArgs AcquireReceiveEvent ()
 		{

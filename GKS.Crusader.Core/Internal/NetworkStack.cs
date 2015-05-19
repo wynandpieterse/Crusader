@@ -3,8 +3,6 @@
 	using System;
 	using System.Net;
 	using System.Net.Sockets;
-	using System.Threading;
-	using System.Threading.Tasks;
 	using System.Collections;
 	using System.Collections.Concurrent;
 
@@ -15,10 +13,8 @@
 	{
 		private bool _disposed = false;
 		private Options _options = null;
-		private CancellationTokenSource _stackRunning = null;
 
-		public ProtocolType Protocol { get; private set; }
-		public CancellationToken StackRunning { get { return _stackRunning.Token; } }
+        public ProtocolType Protocol { get; private set; }
 		public RecyclableMemoryStreamManager ReceiveStreamPool { get; private set; }
 		public ConcurrentBag<SocketAsyncEventArgs> ReceiveEventPool { get; private set; }
 
@@ -26,7 +22,6 @@
 		{
 			_disposed = false;
 			_options = options;
-			_stackRunning = new CancellationTokenSource ();
 
 			Protocol = protocol;
 
@@ -50,21 +45,32 @@
 			return;
 		}
 
-		public virtual void HandleChannelClosed(IChannel channel)
+        public virtual void HandleChannelConnected(IChannel channel)
+        {
+            _options.ChannelListener.HandleConnected(channel);
+
+            return;
+        }
+
+		public virtual void HandleChannelDisconnected(IChannel channel)
 		{
-			_options.ConnectionListener.HandleDisconnected (channel);
+            _options.ChannelListener.HandleDisconnected(channel);
 
 			return;
 		}
+
+        public virtual void HandleChannelExceptioned(IChannel channel, Exception exception)
+        {
+            _options.ChannelListener.HandleExceptioned(channel, exception);
+
+            return;
+        }
 
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!_disposed) {
 				if (disposing) {
-					if (null != _stackRunning) {
-						_stackRunning.Cancel ();
-						_stackRunning.Dispose ();
-					}
+					
 				}
 
 				_disposed = true;

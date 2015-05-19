@@ -28,8 +28,6 @@
 			while (!_connectedClients.TryAdd (channel.RemoteAddress, channel)) {
 			}
 
-			_options.ConnectionListener.HandleConnected (channel);
-
 			return;
 		}
 
@@ -40,21 +38,37 @@
 			while (!_connectedClients.TryRemove (channel.RemoteAddress, out unused)) {
 			}
 
-			_options.ConnectionListener.HandleDisconnected (channel);
-
 			return;
 		}
 
-		public override void HandleChannelClosed (IChannel channel)
+        public override void HandleChannelConnected(IChannel channel)
+        {
+            base.HandleChannelConnected(channel);
+
+            AddClient(channel);
+
+            return;
+        }
+
+        public override void HandleChannelDisconnected (IChannel channel)
 		{
-			base.HandleChannelClosed (channel);
+			base.HandleChannelDisconnected (channel);
 
 			RemoveClient (channel);
 
 			return;
 		}
 
-		protected override void Dispose (bool disposing)
+        public override void HandleChannelExceptioned(IChannel channel, Exception exception)
+        {
+            base.HandleChannelExceptioned(channel, exception);
+
+            RemoveClient(channel);
+
+            return;
+        }
+
+        protected override void Dispose (bool disposing)
 		{
 			if (!_disposed) {
 				if (disposing) {

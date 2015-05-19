@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,13 +34,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMulticastStack.cs" />
+    <Compile Include="Internal\Multicast\MulticastOptions.cs" />
+    <Compile Include="Internal\Multicast\MulticastStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Internal\DefaultListeners\DefaultConnectionListener.cs" />
+    <Compile Include="Internal\DefaultListeners\DefaultChannelListener.cs" />
     <Compile Include="INetworkStack.cs" />
     <Compile Include="Internal\NetworkStack.cs" />
     <Compile Include="IServerStack.cs" />
     <Compile Include="IPacketListener.cs" />
-    <Compile Include="IConnectionListener.cs" />
+    <Compile Include="IChannelListener.cs" />
     <Compile Include="IClientStack.cs" />
     <Compile Include="IChannel.cs" />
     <Compile Include="Internal\Options.cs" />
@@ -52,12 +55,7 @@
     <Compile Include="Internal\Client\ClientOptions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Internal\" />
-    <Folder Include="Internal\Server\" />
-    <Folder Include="Internal\Client\" />
-    <Folder Include="Internal\DefaultListeners\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Packages.config" />
   </ItemGroup>

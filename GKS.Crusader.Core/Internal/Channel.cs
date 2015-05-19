@@ -4,31 +4,23 @@
 	using System.IO;
 	using System.Net;
 	using System.Net.Sockets;
-	using System.Threading;
-	using System.Threading.Tasks;
 
 	public abstract class Channel : IChannel
 	{
 		private bool _disposed = false;
 		private NetworkStack _stack = null;
 		private Options _options = null;
-		private CancellationTokenSource _channelRunning = null;
-		private CancellationTokenSource _systemRunning = null;
 
 		public EndPoint RemoteAddress { get; set; }
 		public Object UserData { get; set; }
 
 		public ProtocolType Protocol { get; internal set; }
-		public CancellationToken ChannelRunning { get { return _channelRunning.Token; } }
-		public CancellationToken SystemRunning { get { return _systemRunning.Token; } }
 
 		protected Channel(NetworkStack stack, Options options, ProtocolType protocol)
 		{
 			_disposed = false;
 			_stack = stack;
 			_options = options;
-			_channelRunning = new CancellationTokenSource ();
-			_systemRunning = CancellationTokenSource.CreateLinkedTokenSource (stack.StackRunning, ChannelRunning);
 
 			Protocol = protocol;
 
@@ -86,18 +78,23 @@
 			return;
 		}
 
-		protected virtual void HandleClosed()
+        protected virtual void HandleConnected()
+        {
+            _stack.HandleChannelConnected(this);
+
+            return;
+        }
+
+		protected virtual void HandleDisconnected()
 		{
-			_stack.HandleChannelClosed (this);
+			_stack.HandleChannelDisconnected (this);
 
 			return;
 		}
 
-		protected void HandleException(Exception exception)
+		protected virtual void HandleExceptioned(Exception exception)
 		{
-			_options.ConnectionListener.HandleException (this, exception);
-
-			HandleClosed ();
+            _stack.HandleChannelExceptioned(this, exception);
 
 			return;
 		}
@@ -108,11 +105,8 @@
 		{
 			if (!_disposed) {
 				if (disposing) {
-					if (null != _channelRunning) {
-						_channelRunning.Cancel ();
-						_channelRunning.Dispose ();
-					}
-				}
+
+                }
 
 				_disposed = true;
 			}

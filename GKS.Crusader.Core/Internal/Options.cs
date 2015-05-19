@@ -4,13 +4,13 @@
 
 	public abstract class Options
 	{
-		public IConnectionListener ConnectionListener { get; set; }
-		public IPacketListener RawPacketListener { get; set; }
+		public IChannelListener ChannelListener { get; set; }
+		public IPacketListener PacketListener { get; set; }
 
 		protected Options()
 		{
-			ConnectionListener = new DefaultConnectionListener ();
-			RawPacketListener = new DefaultPacketListener ();
+			ChannelListener = new DefaultChannelListener ();
+			PacketListener = new DefaultPacketListener ();
 
 			return;
 		}
