@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crusader", "Crusader\Crusader.csproj", "{D20A51FB-9905-480B-969A-F509055E80B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GKS.Crusader.Core", "GKS.Crusader.Core\GKS.Crusader.Core.csproj", "{46136F08-C17B-45B0-90EE-18F816D2EE05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GKS.Crusader.Protocols.TCP", "GKS.Crusader.Protocol.TCP\GKS.Crusader.Protocols.TCP.csproj", "{F8A1A48B-41A6-40B7-BADB-7499FC07AFB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GKS.Crusader.Protocols.UDP", "GKS.Crusader.Protocol.UDP\GKS.Crusader.Protocols.UDP.csproj", "{98164AC0-851F-4A8A-A1B2-D0718A368C72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46136F08-C17B-45B0-90EE-18F816D2EE05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46136F08-C17B-45B0-90EE-18F816D2EE05}.Debug|x86.Build.0 = Debug|Any CPU
+		{46136F08-C17B-45B0-90EE-18F816D2EE05}.Release|x86.ActiveCfg = Release|Any CPU
+		{46136F08-C17B-45B0-90EE-18F816D2EE05}.Release|x86.Build.0 = Release|Any CPU
+		{98164AC0-851F-4A8A-A1B2-D0718A368C72}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{98164AC0-851F-4A8A-A1B2-D0718A368C72}.Debug|x86.Build.0 = Debug|Any CPU
+		{98164AC0-851F-4A8A-A1B2-D0718A368C72}.Release|x86.ActiveCfg = Release|Any CPU
+		{98164AC0-851F-4A8A-A1B2-D0718A368C72}.Release|x86.Build.0 = Release|Any CPU
+		{D20A51FB-9905-480B-969A-F509055E80B6}.Debug|x86.ActiveCfg = Debug|x86
+		{D20A51FB-9905-480B-969A-F509055E80B6}.Debug|x86.Build.0 = Debug|x86
+		{D20A51FB-9905-480B-969A-F509055E80B6}.Release|x86.ActiveCfg = Release|x86
+		{D20A51FB-9905-480B-969A-F509055E80B6}.Release|x86.Build.0 = Release|x86
+		{F8A1A48B-41A6-40B7-BADB-7499FC07AFB5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F8A1A48B-41A6-40B7-BADB-7499FC07AFB5}.Debug|x86.Build.0 = Debug|Any CPU
+		{F8A1A48B-41A6-40B7-BADB-7499FC07AFB5}.Release|x86.ActiveCfg = Release|Any CPU
+		{F8A1A48B-41A6-40B7-BADB-7499FC07AFB5}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

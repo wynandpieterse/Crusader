@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{D20A51FB-9905-480B-969A-F509055E80B6}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Crusader</RootNamespace>
+    <AssemblyName>Crusader</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\GKS.Crusader.Core\GKS.Crusader.Core.csproj">
+      <Project>{46136F08-C17B-45B0-90EE-18F816D2EE05}</Project>
+      <Name>GKS.Crusader.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GKS.Crusader.Protocol.TCP\GKS.Crusader.Protocols.TCP.csproj">
+      <Project>{F8A1A48B-41A6-40B7-BADB-7499FC07AFB5}</Project>
+      <Name>GKS.Crusader.Protocols.TCP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GKS.Crusader.Protocol.UDP\GKS.Crusader.Protocols.UDP.csproj">
+      <Project>{98164AC0-851F-4A8A-A1B2-D0718A368C72}</Project>
+      <Name>GKS.Crusader.Protocols.UDP</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

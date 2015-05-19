@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{46136F08-C17B-45B0-90EE-18F816D2EE05}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GKS.Crusader.Core</RootNamespace>
+    <AssemblyName>GKS.Crusader.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.0.0.0\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Internal\DefaultListeners\DefaultConnectionListener.cs" />
+    <Compile Include="INetworkStack.cs" />
+    <Compile Include="Internal\NetworkStack.cs" />
+    <Compile Include="IServerStack.cs" />
+    <Compile Include="IPacketListener.cs" />
+    <Compile Include="IConnectionListener.cs" />
+    <Compile Include="IClientStack.cs" />
+    <Compile Include="IChannel.cs" />
+    <Compile Include="Internal\Options.cs" />
+    <Compile Include="Internal\Channel.cs" />
+    <Compile Include="Internal\Server\ServerStack.cs" />
+    <Compile Include="Internal\Server\ServerOptions.cs" />
+    <Compile Include="Internal\DefaultListeners\DefaultPacketListener.cs" />
+    <Compile Include="Internal\Client\ClientStack.cs" />
+    <Compile Include="Internal\Client\ClientOptions.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Internal\" />
+    <Folder Include="Internal\Server\" />
+    <Folder Include="Internal\Client\" />
+    <Folder Include="Internal\DefaultListeners\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Packages.config" />
+  </ItemGroup>
+</Project>
